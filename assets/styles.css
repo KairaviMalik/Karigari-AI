@@ -1,0 +1,313 @@
+/* KARIGARI GLOBAL THEME */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap');
+
+:root {
+    --ivory: #f7f2e8;
+    --cream: #eee4d3;
+    --maroon: #711f1f;
+    --dark-maroon: #511515;
+    --charcoal: #211f1c;
+    --gold: #b58a52;
+    --white: #fffdf8;
+}
+
+/* Entire application */
+
+html, body, [class*="css"] {
+    font-family: 'DM Sans', sans-serif;
+}
+
+.stApp {
+    background-color: var(--ivory);
+    color: var(--charcoal);
+}
+
+/* Remove default Streamlit UI */
+
+[data-testid="stHeader"] {
+    background: transparent;
+}
+
+[data-testid="stSidebar"] {
+    display: none;
+}
+
+#MainMenu {
+    visibility: hidden;
+}
+
+footer {
+    visibility: hidden;
+}
+
+.block-container {
+    padding-top: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    max-width: 100% !important;
+}
+
+/* Navbar */
+
+.navbar {
+    height: 74px;
+    padding: 0 6%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #fffaf2;
+    border-bottom: 1px solid #ded4c5;
+}
+
+.brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--charcoal);
+}
+
+.navlinks {
+    display: flex;
+    gap: 34px;
+}
+
+.navlinks a {
+    text-decoration: none;
+    color: #302d29;
+    font-size: 15px;
+    font-weight: 500;
+}
+
+/* HERO */
+
+.hero {
+    min-height: 570px;
+    padding: 80px 7%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(25, 17, 12, .94) 0%,
+            rgba(40, 20, 14, .82) 42%,
+            rgba(40, 20, 14, .15) 100%
+        ),
+        url("https://images.unsplash.com/photo-1610030469983-98e550d6193c?auto=format&fit=crop&w=1800&q=90");
+    background-size: cover;
+    background-position: center;
+}
+
+.hero-content {
+    max-width: 660px;
+}
+
+.hero-tag {
+    color: #d5b47c;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.hero h1 {
+    font-family: 'Playfair Display', serif;
+    color: #fffaf0;
+    font-size: 67px;
+    line-height: 1.04;
+    margin: 14px 0 20px 0;
+}
+
+.hero p {
+    color: #eee3d4;
+    font-size: 18px;
+    line-height: 1.7;
+    max-width: 570px;
+}
+
+.hero-buttons {
+    margin-top: 32px;
+    display: flex;
+    gap: 14px;
+}
+
+.btn-primary,
+.btn-secondary {
+    display: inline-block;
+    padding: 14px 24px;
+    border-radius: 7px;
+    text-decoration: none !important;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: #fffaf2;
+    color: #351b17 !important;
+}
+
+.btn-secondary {
+    border: 1px solid #e5d6c3;
+    color: #fffaf2 !important;
+}
+
+/* Features */
+
+.features {
+    padding: 34px 7%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    background: #fffaf2;
+    border-bottom: 1px solid #e4dacb;
+}
+
+.feature {
+    padding: 10px 25px;
+    text-align: center;
+    border-right: 1px solid #ded4c5;
+}
+
+.feature:last-child {
+    border-right: none;
+}
+
+.feature-icon {
+    font-size: 27px;
+}
+
+.feature h3 {
+    font-family: 'Playfair Display', serif;
+    margin: 10px 0 6px;
+    font-size: 18px;
+}
+
+.feature p {
+    margin: 0;
+    color: #70675d;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+/* Sections */
+
+.section {
+    padding: 65px 7%;
+}
+
+.section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    margin: 0;
+}
+
+.section-subtitle {
+    color: #786e64;
+    margin-top: 8px;
+}
+
+/* Craft cards */
+
+.craft-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+    margin-top: 32px;
+}
+
+.craft-card {
+    background: #fffaf2;
+    border: 1px solid #dfd4c4;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: .25s;
+}
+
+.craft-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(45, 28, 19, .12);
+}
+
+.craft-card img {
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+}
+
+.craft-info {
+    padding: 17px;
+}
+
+.craft-info h3 {
+    font-family: 'Playfair Display', serif;
+    margin: 0 0 5px;
+}
+
+.craft-info p {
+    margin: 0;
+    color: #786e64;
+    font-size: 13px;
+}
+
+/* Mission banner */
+
+.mission {
+    margin: 15px 7% 70px;
+    min-height: 300px;
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 55px;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(45,20,15,.95),
+            rgba(45,20,15,.65)
+        ),
+        url("https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&w=1600&q=90");
+    background-size: cover;
+    background-position: center;
+}
+
+.mission-content {
+    max-width: 570px;
+}
+
+.mission h2 {
+    font-family: 'Playfair Display', serif;
+    color: white;
+    font-size: 39px;
+    margin-bottom: 12px;
+}
+
+.mission p {
+    color: #eee1d2;
+    line-height: 1.7;
+}
+
+/* Footer */
+
+.site-footer {
+    padding: 28px 7%;
+    background: #211f1c;
+    color: #d9cec0;
+    display: flex;
+    justify-content: space-between;
+}
+
+/* Mobile */
+
+@media (max-width: 800px) {
+    .navlinks {
+        display: none;
+    }
+
+    .hero h1 {
+        font-size: 45px;
+    }
+
+    .features,
+    .craft-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}

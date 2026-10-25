@@ -1,0 +1,35 @@
+# Virtual environments
+venv/
+venv311/
+.venv/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment / secrets
+.env
+*.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.log
+*.tmp
+
+# TensorFlow model - deployment will use ONNX
+model/*.keras
+model/*.h5
+
+# Keep ONNX model
+!model/karigari_model.onnx
+
+# Colab / notebooks
+.ipynb_checkpoints/
