@@ -1,5 +1,6 @@
 import streamlit as st
-import requests
+import onnxruntime as ort
+import numpy as np
 from PIL import Image
 import io
 import base64
@@ -20,9 +21,17 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-API_URL = "https://displease-impure-trapping.ngrok-free.dev/predict"
+MODEL_PATH = "model/karigari_model.onnx"
 
 CONFIDENCE_THRESHOLD = 55.0
+
+CLASSES = ["Banarasi", "Bandhani", "Kanjeevaram", "Patola", "Tussar"]
+
+@st.cache_resource
+def load_onnx_model():
+    session = ort.InferenceSession(MODEL_PATH, providers=["CPUExecutionProvider"])
+    return session, session.get_inputs()[0].name
+
 
 
 # ============================================================
@@ -2847,105 +2856,65 @@ def discover_page():
 # ============================================================
 
 
-def predict_image(
-    uploaded_file,
-    image_bytes
-):
+def predict_image(uploaded_file, image_bytes):
 
-    with st.spinner(
-        "Identifying the craft..."
-    ):
+    with st.spinner("Identifying the craft..."):
 
         try:
+            session, input_name = load_onnx_model()
 
-            response = requests.post(
+            image = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+            image = image.resize((224, 224))
+            img_array = np.asarray(image, dtype=np.float32)
+            img_array = np.expand_dims(img_array, axis=0)
 
-                API_URL,
+            predictions = np.asarray(
+                session.run(None, {input_name: img_array})[0]
+            ).squeeze()
 
-                files={
-
-                    "image": (
-
-                        uploaded_file.name,
-
-                        image_bytes,
-
-                        uploaded_file.type
-                        or "image/jpeg"
-
-                    )
-
-                },
-
-                headers={
-
-                    "ngrok-skip-browser-warning":
-                    "true",
-
-                    "User-Agent":
-                    "Karigari-App"
-
-                },
-
-                timeout=60
-
-            )
-
-            response.raise_for_status()
-
-            result = (
-                response.json()
-            )
-
-            if not result.get(
-                "success"
-            ):
-
-                st.error(
-
-                    result.get(
-
-                        "error",
-
-                        "Unable to analyse image."
-
-                    )
-
+            if predictions.ndim != 1 or len(predictions) != len(CLASSES):
+                raise ValueError(
+                    f"Unexpected model output shape: {predictions.shape}"
                 )
 
-                return
-
-            st.session_state[
-                "prediction_result"
-            ] = result
-
-            st.session_state[
-                "prediction_image"
-            ] = image_bytes
-
-            go(
-                "result"
+            pred_sum = float(np.sum(predictions))
+            looks_like_probabilities = (
+                np.all(predictions >= 0)
+                and np.all(predictions <= 1)
+                and abs(pred_sum - 1.0) < 0.05
             )
 
-        except requests.exceptions.ConnectionError:
+            if not looks_like_probabilities:
+                shifted = predictions - np.max(predictions)
+                exp_values = np.exp(shifted)
+                predictions = exp_values / np.sum(exp_values)
 
-            st.error(
-                "Recognition service is offline. "
-                "Keep the Colab backend connected."
-            )
+            top_indices = np.argsort(predictions)[::-1][:3]
 
-        except requests.exceptions.Timeout:
+            top_predictions = [
+                {
+                    "craft": CLASSES[int(index)],
+                    "confidence": round(float(predictions[index]) * 100, 2)
+                }
+                for index in top_indices
+            ]
 
-            st.error(
-                "Recognition service timed out. "
-                "Please try again."
-            )
+            best_index = int(np.argmax(predictions))
+
+            result = {
+                "success": True,
+                "prediction": CLASSES[best_index],
+                "confidence": round(float(predictions[best_index]) * 100, 2),
+                "top_predictions": top_predictions
+            }
+
+            st.session_state["prediction_result"] = result
+            st.session_state["prediction_image"] = image_bytes
+
+            go("result")
 
         except Exception as error:
-
-            st.error(
-                f"Prediction failed: {error}"
-            )
+            st.error(f"Prediction failed: {error}")
 
 
 # ============================================================
